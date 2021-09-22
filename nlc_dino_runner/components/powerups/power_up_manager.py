@@ -5,7 +5,6 @@ from nlc_dino_runner.components.powerups.shield import Shield
 
 
 class PowerUpManager:
-
     def __init__(self):
         self.power_ups = []
         self.when_appears = 0
@@ -21,7 +20,7 @@ class PowerUpManager:
         self.points = points
         if len(self.power_ups) == 0:
             if self.when_appears == self.points:
-                print("generating powerup")
+                #print("generating powerup")
                 self.when_appears = random.randint(self.when_appears + 200, 500 + self.when_appears)
                 self.power_ups.append(Shield())
         #return self.power_ups

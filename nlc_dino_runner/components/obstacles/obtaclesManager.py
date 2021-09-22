@@ -23,12 +23,18 @@ class ObstaclesManager:
                 if game.player.shield:
                     self.obstacles_list.remove(obstacle)
                 else:
-                    if game.points > game.highest_score:
-                        game.highest_score = game.points
-                    pygame.time.delay(1500)
-                    game.playing = False
-                    game.death_count += 1
-                    break
+                    if game.live_manager.lives > 1:
+                        game.live_manager.reduce_lives()
+                        game.player.shield = True
+                        start_time = pygame.time.get_ticks()
+                        game.player.shield_time_up = start_time + 1000
+                    else:
+                        if game.points > game.highest_score:
+                            game.highest_score = game.points
+                        pygame.time.delay(1500)
+                        game.playing = False
+                        game.death_count += 1
+                        break
 
     def draw(self, screen):
         for obstacles in self.obstacles_list:

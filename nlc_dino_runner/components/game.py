@@ -1,5 +1,7 @@
 import pygame
 
+from nlc_dino_runner.components.lives.lives import Live
+from nlc_dino_runner.components.lives.livesManager import LiveManager
 from nlc_dino_runner.components.powerups.power_up_manager import PowerUpManager
 from nlc_dino_runner.utils import text_utils
 from nlc_dino_runner.components.obstacles.obtaclesManager import ObstaclesManager
@@ -20,23 +22,25 @@ class Game:
         self.y_pos_bg = 360
         self.player = Dinosaur()
         self.obstacles_manager = ObstaclesManager()
+        self.power_up_manager = PowerUpManager()
         self.points = 0
         self.running = True
         self.death_count = 0
         self.highest_score = 0
-        self.power_up_manager = PowerUpManager()
-
+        self.live = Live()
+        self.live_manager = LiveManager()
 
     def run(self):
         self.obstacles_manager.reset_obstacles()
         self.power_up_manager.reset_power_ups(self.points)
+        self.live_manager.reset_lives()
+        self.game_speed = 20
         self.points = 0
         self.playing = True
         while self.playing:
             self.event()
             self.update()
             self.draw()
-
 
     def event(self):
         for event in pygame.event.get():
@@ -57,6 +61,7 @@ class Game:
         self.player.draw(self.screen)
         self.obstacles_manager.draw(self.screen)
         self.power_up_manager.draw(self.screen)
+        self.live_manager.draw(self.screen)
         pygame.display.update()
         pygame.display.flip()
 
