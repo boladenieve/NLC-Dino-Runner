@@ -5,8 +5,9 @@ from nlc_dino_runner.components.lives.livesManager import LiveManager
 from nlc_dino_runner.components.powerups.power_up_manager import PowerUpManager
 from nlc_dino_runner.utils import text_utils
 from nlc_dino_runner.components.obstacles.obtaclesManager import ObstaclesManager
-from nlc_dino_runner.utils.constants import TITLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, BG, FPS
+from nlc_dino_runner.utils.constants import TITLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, BG, FPS#, GAME_THEME
 from nlc_dino_runner.components.dinosaur import Dinosaur
+from nlc_dino_runner.components.hammer import Hammer
 
 
 class Game:
@@ -37,6 +38,7 @@ class Game:
         self.game_speed = 20
         self.points = 0
         self.playing = True
+        #GAME_THEME.play()  # AÑADIDO
         while self.playing:
             self.event()
             self.update()
@@ -85,6 +87,7 @@ class Game:
         while self.running:
             if not self.playing:
                 self.show_menu()
+                #GAME_THEME.stop()
 
     def show_menu(self):
         self.running = True
@@ -120,10 +123,10 @@ class Game:
         text, text_rect = text_utils.get_centered_message(message)
         self.screen.blit(text, text_rect)
 
-        death_score, death_score_rect = text_utils.get_centered_message("Death count: " + str(self.death_count), heigth=half_screen_height + 50)
+        death_score, death_score_rect = text_utils.get_centered_message("Death count: " + str(self.death_count), height=half_screen_height + 50)
         self.screen.blit(death_score, death_score_rect)
 
-        highest, highest_rect = text_utils.get_centered_message("Highest score: " + str(self.highest_score), heigth=560 , width= 170)
+        highest, highest_rect = text_utils.get_centered_message("Highest score: " + str(self.highest_score), height=560 , width= 170)
         self.screen.blit(highest, highest_rect)
 
         #Imprimiendo dinosaurio de portada

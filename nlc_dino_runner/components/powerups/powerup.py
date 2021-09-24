@@ -1,5 +1,4 @@
 import random
-
 from pygame.sprite import Sprite
 from nlc_dino_runner.utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 

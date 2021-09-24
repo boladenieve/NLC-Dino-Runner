@@ -3,7 +3,8 @@ import pygame.time
 
 from nlc_dino_runner.components.obstacles.cactus import Cactus
 from nlc_dino_runner.components.obstacles.large_cactus import LargeCactus
-from nlc_dino_runner.utils.constants import SMALL_CACTUS, LARGE_CACTUS
+from nlc_dino_runner.utils.constants import SMALL_CACTUS, LARGE_CACTUS#, BIRD, HIT_SOUND, GAME_OVER_SOUND #AÑADIDO
+
 
 
 class ObstaclesManager:
@@ -24,6 +25,7 @@ class ObstaclesManager:
                     self.obstacles_list.remove(obstacle)
                 else:
                     if game.live_manager.lives > 1:
+                        #HIT_SOUND.play()  # AÑADIDO
                         game.live_manager.reduce_lives()
                         game.player.shield = True
                         start_time = pygame.time.get_ticks()
@@ -34,6 +36,7 @@ class ObstaclesManager:
                         pygame.time.delay(1500)
                         game.playing = False
                         game.death_count += 1
+                        #GAME_OVER_SOUND.play()
                         break
 
     def draw(self, screen):
