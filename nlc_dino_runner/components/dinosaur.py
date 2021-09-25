@@ -13,7 +13,8 @@ from nlc_dino_runner.utils.constants import (
     DUCKING_HAMMER,
     DEFAULT_TYPE,
     SHIELD_TYPE,
-    HAMMER_TYPE
+    HAMMER_TYPE,
+    DINO_DEAD
 )
 from nlc_dino_runner.utils.text_utils import get_centered_message
 from nlc_dino_runner.components.hammer import Hammer
@@ -41,6 +42,7 @@ class Dinosaur(Sprite):
             SHIELD_TYPE: DUCKING_SHIELD,
             HAMMER_TYPE: DUCKING_HAMMER
         }
+        self.dead_img = DINO_DEAD
         self.type = DEFAULT_TYPE
         self.image = self.run_img[self.type][0]
         self.hammer_image = HAMMER
@@ -62,8 +64,9 @@ class Dinosaur(Sprite):
         self.hammer_available = False
         self.hammer_time_up = 0
         self.show_hammer_text = False
+        #self.hammer_availables = 0
 
-    def update(self, user_input):
+    def update(self, user_input, game_speed):
         if self.dino_jump:
             self.jump()
         if self.dino_duck:
@@ -95,6 +98,14 @@ class Dinosaur(Sprite):
         if self.step_index >= 10:
             self.step_index = 0
 
+        if user_input[pygame.K_SPACE] and self.hammer_available:
+            self.hammer = Hammer(self.dino_rect.x, self.dino_rect.y, game_speed)
+            self.hammer_availables += 1
+            if self.hammer_availables == 8:
+                self.hammer_available = False
+                self.type = DEFAULT_TYPE
+                self.hammer_availables = 0
+
     def run(self):
         self.image = self.run_img[self.type][self.step_index // 5]
         self.dino_rect = self.image.get_rect()
@@ -120,8 +131,18 @@ class Dinosaur(Sprite):
             self.dino_jump = False
             self.jump_vel = self.JUMP_VEL
 
-    def check_invincibility(self, screen):
+    def draw_dead(self, screen):
+        self.image = self.dead_img
+        self.dino_rect.x = self.X_POS
+        self.dino_rect.y = self.Y_POS
+        screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))
+
+    def check_invincibility(self, screen, nigth):
         if self.shield:
+            if nigth:
+                color = (255, 255, 255)
+            else:
+                color = (0, 0, 0)
             time_to_show = round((self.shield_time_up - pygame.time.get_ticks())/1000, 1)
             if time_to_show < 0:
                 self.shield = False
@@ -133,7 +154,8 @@ class Dinosaur(Sprite):
                         f'Shield enabled for {time_to_show} seg',
                         width=500,
                         height=40,
-                        size=20
+                        size=20,
+                        text_color=color
                     )
                     screen.blit(text, text_rect)
                 else:
@@ -141,13 +163,14 @@ class Dinosaur(Sprite):
                         f'Invincibility enabled for {time_to_show} seg',
                         width=500,
                         height=100,
-                        size=20
+                        size=20,
+                        text_color=color
                     )
                     screen.blit(text, text_rect)
 
     def check_hammer(self, screen):
         if self.hammer_available:
-            time_to_show = round((self.hammer_time_up - pygame.time.get_ticks()) / 1000, 2)
+            time_to_show = round((self.hammer_time_up - pygame.time.get_ticks()) / 1000, 1)
             if time_to_show < 0:
                 self.hammer_available = False
                 if self.type == HAMMER_TYPE:  # or self.type == HAMMER_TYPE: #AÑADIDO VOLVER A DEFAULT TYPE EN POWERUPS
